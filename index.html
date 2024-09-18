@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAT: Register/Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="bg-gradient-to-l from-pink-100 to-sky-100 text-black antialiased">
+    <nav class="bg-gradient-to-r from-pink-100 to-sky-100 border-b border-black">
+        <div class="max-w-6xl mx-auto px-3">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0">
+                    <a href="#">
+                        <img src="cats.png" alt="CAT Logo" class="h-48 w-48">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-6xl mx-auto p-4">
+        <div class="bg-transparent border border-black rounded-lg shadow p-6 mb-8">
+            <h2 class="text-3xl font-bold mb-6 text-center">Welcome to CAT</h2>
+            
+            <!-- Tab Navigation -->
+            <div class="flex justify-center mb-6">
+                <button id="registerTab" class="bg-blue-500 text-white px-4 py-2 rounded-t-md">Register</button>
+                <button id="loginTab" class="bg-blue-500 text-white px-4 py-2 rounded-t-md ml-2">Login</button>
+            </div>
+
+            <!-- Register Form -->
+            <div id="registerForm" class="space-y-4">
+                <div>
+                    <label for="fullName" class="block text-lg">Full Name</label>
+                    <input type="text" id="fullName" class="border-black focus:ring-blue-500 focus:border-blue-500 rounded-md w-full" required>
+                </div>
+                <div>
+                    <label for="email" class="block text-lg">Email</label>
+                    <input type="email" id="email" class="border-black focus:ring-blue-500 focus:border-blue-500 rounded-md w-full" required>
+                </div>
+                <div>
+                    <label for="phoneNumber" class="block text-lg">Phone Number</label>
+                    <input type="text" id="phoneNumber" class="border-black focus:ring-blue-500 focus:border-blue-500 rounded-md w-full" required>
+                </div>
+                <div>
+                    <label for="password" class="block text-lg">Password</label>
+                    <input type="password" id="password" class="border-black focus:ring-blue-500 focus:border-blue-500 rounded-md w-full" required>
+                </div>
+                <div>
+                    <label for="source" class="block text-lg">How Did You Hear About Us?</label>
+                    <select id="source" class="border-black bg-transparent focus:ring-blue-500 focus:border-blue-500 rounded-md w-full">
+                        <option value="Friend">Friend</option>
+                        <option value="Social Media">Social Media</option>
+                        <option value="Online Ad">Online Ad</option>
+                    </select>
+                </div>
+                <button type="submit" id="registerBtn" class="bg-blue-500 text-white px-4 py-2 rounded-md w-full">Register</button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="loginForm" class="space-y-4 hidden">
+                <div>
+                    <label for="loginPhone" class="block text-lg">Phone Number</label>
+                    <input type="text" id="loginPhone" class="border-black focus:ring-blue-500 focus:border-blue-500 rounded-md w-full" required>
+                </div>
+                <div>
+                    <label for="loginPassword" class="block text-lg">Password</label>
+                    <input type="password" id="loginPassword" class="border-black focus:ring-blue-500 focus:border-blue-500 rounded-md w-full" required>
+                </div>
+                <button type="submit" id="loginBtn" class="bg-blue-500 text-white px-4 py-2 rounded-md w-full">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="p-0 border border-black">
+        <img src="cats.gif" class="object-cover w-full h-full" alt="CAT GIF">
+    </footer>
+
+    <script src="register.js"></script>
+</body>
+</html>
