@@ -15,7 +15,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchFinanceData = async () => {
       const token = await getAccessTokenSilently();
-      const response = await axios.get('http://localhost:5000/api/finance', {
+      const response = await axios.get('https://cat-4ouq.onrender.com/api/finance', {
         params: { userId: user.sub },
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -44,7 +44,7 @@ const Dashboard = () => {
   const handleSaveData = async () => {
     const token = await getAccessTokenSilently();
     await axios.post(
-      'http://localhost:5000/api/finance',
+      'https://cat-4ouq.onrender.com/api/finance',
       { userId: user.sub, date: new Date().toISOString().split('T')[0], entries: financeData, categories },
       { headers: { Authorization: `Bearer ${token}` } }
     );
