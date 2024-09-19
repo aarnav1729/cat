@@ -1,4 +1,4 @@
-const jwt = require('express-jwt');
+const { expressjwt: jwt } = require('express-jwt');
 const jwks = require('jwks-rsa');
 
 // JWT middleware for validating Auth0 tokens
