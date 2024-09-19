@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Auth0Provider } from '@auth0/auth0-react';
+import { Auth0Provider, withAuthenticationRequired } from '@auth0/auth0-react'; // Update
 import Home from './components/Home';
 import Dashboard from './components/Dashboard';
 import Navbar from './components/Navbar';
@@ -21,7 +21,8 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          {/* Protect the dashboard route */}
+          <Route path="/dashboard" element={withAuthenticationRequired(Dashboard)} />
         </Routes>
       </Router>
     </Auth0Provider>

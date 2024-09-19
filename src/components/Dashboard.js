@@ -14,28 +14,32 @@ const Dashboard = () => {
   // Fetch user-specific data from backend
   useEffect(() => {
     const fetchFinanceData = async () => {
-      const token = await getAccessTokenSilently();
-      const response = await axios.get('https://cat-4ouq.onrender.com/api/finance', {
-        params: { userId: user.sub },
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const data = response.data;
-      if (data.length > 0) {
-        setFinanceData(data[0].entries);
-        setCategories(data[0].categories);
+      if (isAuthenticated) {
+        try {
+          const token = await getAccessTokenSilently();
+          const response = await axios.get('https://cat-4ouq.onrender.com/api/finance', {
+            params: { userId: user.sub },
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          const data = response.data;
+          if (data.length > 0) {
+            setFinanceData(data[0].entries);
+            setCategories(data[0].categories);
+          }
+        } catch (error) {
+          console.error('Error fetching finance data:', error);
+        }
       }
     };
 
-    if (isAuthenticated) {
-      fetchFinanceData();
-    }
+    fetchFinanceData();
   }, [isAuthenticated, getAccessTokenSilently, user]);
 
   const handleAddCategory = () => {
     if (newCategoryType && newCategory) {
       setCategories((prev) => ({
         ...prev,
-        [newCategoryType]: [...prev[newCategoryType], newCategory]
+        [newCategoryType]: [...prev[newCategoryType], newCategory],
       }));
       setNewCategory('');
     }
@@ -43,14 +47,19 @@ const Dashboard = () => {
 
   const handleSaveData = async () => {
     const token = await getAccessTokenSilently();
-    await axios.post(
-      'https://cat-4ouq.onrender.com/api/finance',
-      { userId: user.sub, date: new Date().toISOString().split('T')[0], entries: financeData, categories },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+    try {
+      await axios.post(
+        'https://cat-4ouq.onrender.com/api/finance',
+        { userId: user.sub, date: new Date().toISOString().split('T')[0], entries: financeData, categories },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      alert('Data saved successfully!');
+    } catch (error) {
+      console.error('Error saving data:', error);
+    }
   };
 
-  return isAuthenticated ? (
+  return (
     <div className="p-6">
       <h1 className="text-3xl mb-4">Dashboard for {user.name}</h1>
       <div className="mb-6">
@@ -85,14 +94,11 @@ const Dashboard = () => {
         Save Data
       </button>
 
+      {/* Visualize income, expenditure, and investment data */}
       <div className="grid grid-cols-2 gap-4 mt-8">
         <IncomePieChart data={financeData} categories={categories.income} />
         <ExpenditurePieChart data={financeData} categories={categories.expenditure} />
       </div>
-    </div>
-  ) : (
-    <div className="p-6">
-      <h1>You need to log in to access your dashboard.</h1>
     </div>
   );
 };
