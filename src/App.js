@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Updated imports
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Auth0Provider } from '@auth0/auth0-react';
 import Home from './components/Home';
 import Dashboard from './components/Dashboard';
@@ -19,8 +19,8 @@ function App() {
     >
       <Router>
         <Navbar />
-        <Routes> {/* Updated Switch to Routes */}
-          <Route path="/" element={<Home />} /> {/* Updated Route structure */}
+        <Routes>
+          <Route path="/" element={<Home />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </Router>
