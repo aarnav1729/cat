@@ -85,7 +85,6 @@ const Dashboard = () => {
         Save Data
       </button>
 
-      {/* Visualize income, expenditure, and investment data */}
       <div className="grid grid-cols-2 gap-4 mt-8">
         <IncomePieChart data={financeData} categories={categories.income} />
         <ExpenditurePieChart data={financeData} categories={categories.expenditure} />
