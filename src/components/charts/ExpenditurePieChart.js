@@ -2,13 +2,17 @@ import React, { useEffect } from 'react';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 
-const ExpenditurePieChart = ({ data, customCategories }) => {
+const ExpenditurePieChart = ({ data, categories }) => {
   useEffect(() => {
     const chart = am4core.create('expenditurePieChart', am4charts.PieChart);
-    chart.data = customCategories.map((category) => ({
+
+    const categoryData = categories.map((category) => ({
       category,
-      value: data[category] || 0
+      value: data.filter((entry) => entry.category === category && entry.type === 'expenditure')
+                 .reduce((sum, entry) => sum + entry.amount, 0)
     }));
+
+    chart.data = categoryData;
 
     const pieSeries = chart.series.push(new am4charts.PieSeries());
     pieSeries.dataFields.value = 'value';
@@ -17,7 +21,7 @@ const ExpenditurePieChart = ({ data, customCategories }) => {
     return () => {
       chart.dispose();
     };
-  }, [data, customCategories]);
+  }, [data, categories]);
 
   return <div id="expenditurePieChart" style={{ width: '100%', height: '400px' }}></div>;
 };

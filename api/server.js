@@ -20,6 +20,31 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
+// Define schemas and models
+const entrySchema = new mongoose.Schema({
+  amount: Number,
+  method: String,
+  category: String,
+  type: {
+    type: String,
+    enum: ['income', 'expenditure', 'investment'],
+    default: 'expenditure'
+  }
+});
+
+const userFinanceSchema = new mongoose.Schema({
+  userId: String,
+  date: String,
+  categories: {
+    income: [String],
+    expenditure: [String],
+    investment: [String]
+  },
+  entries: [entrySchema]
+});
+
+const UserFinance = mongoose.model('UserFinance', userFinanceSchema);
+
 // JWT middleware for protecting routes
 const checkJwt = jwt({
   secret: jwks.expressJwtSecret({
@@ -33,12 +58,38 @@ const checkJwt = jwt({
   algorithms: ['RS256'],
 });
 
-// Define your finance routes, protect them using checkJwt
+// Routes to handle finance data for each user
 app.use('/api/finance', checkJwt);
 
-// Sample route to test the API
-app.get('/api/finance', (req, res) => {
-  res.send('Finance API works');
+app.get('/api/finance', async (req, res) => {
+  const { userId } = req.query;
+  try {
+    const userFinance = await UserFinance.findOne({ userId });
+    res.json(userFinance);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching data' });
+  }
+});
+
+app.post('/api/finance', async (req, res) => {
+  const { userId, date, entries, categories } = req.body;
+  try {
+    let userFinance = await UserFinance.findOne({ userId });
+
+    if (!userFinance) {
+      // Create new user finance record if not found
+      userFinance = new UserFinance({ userId, date, entries, categories });
+    } else {
+      // Update the existing user data
+      userFinance.entries = entries;
+      userFinance.categories = categories;
+    }
+
+    await userFinance.save();
+    res.json({ message: 'Data saved successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error saving data' });
+  }
 });
 
 // Start the server
