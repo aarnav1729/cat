@@ -1,7 +1,26 @@
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const dotenv = require('dotenv');
 const { expressjwt: jwt } = require('express-jwt');
 const jwks = require('jwks-rsa');
 
-// JWT middleware for validating Auth0 tokens
+// Initialize dotenv to load environment variables from .env file
+dotenv.config();
+
+// Initialize Express app
+const app = express();
+
+// Apply middlewares
+app.use(cors());
+app.use(express.json());
+
+// MongoDB connection
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB connected'))
+  .catch((err) => console.error('MongoDB connection error:', err));
+
+// JWT middleware for protecting routes
 const checkJwt = jwt({
   secret: jwks.expressJwtSecret({
     cache: true,
@@ -14,34 +33,16 @@ const checkJwt = jwt({
   algorithms: ['RS256'],
 });
 
-// protect all routes
+// Define your finance routes, protect them using checkJwt
 app.use('/api/finance', checkJwt);
 
-// API Endpoints (Protected)
-app.post('/api/finance', async (req, res) => {
-  const { userId, date, entries, categories } = req.body;
-  try {
-    const existingData = await UserFinance.findOne({ userId, date });
-    if (existingData) {
-      existingData.entries = entries;
-      existingData.categories = categories;
-      await existingData.save();
-    } else {
-      const finance = new UserFinance({ userId, date, entries, categories });
-      await finance.save();
-    }
-    res.json({ message: 'Data saved successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error saving data' });
-  }
+// Sample route to test the API
+app.get('/api/finance', (req, res) => {
+  res.send('Finance API works');
 });
 
-app.get('/api/finance', async (req, res) => {
-  const { userId } = req.query;
-  try {
-    const finances = await UserFinance.find({ userId });
-    res.json(finances);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching data' });
-  }
+// Start the server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
