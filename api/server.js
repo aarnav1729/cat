@@ -14,7 +14,7 @@ const checkJwt = jwt({
   algorithms: ['RS256'],
 });
 
-// Protect all routes
+// protect all routes
 app.use('/api/finance', checkJwt);
 
 // API Endpoints (Protected)
